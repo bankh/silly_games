@@ -1,0 +1,20 @@
+name: Validate catalog
+
+# Runs on every PR (and push to main) to make sure new games are well-formed
+# before they can be merged / deployed.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate game catalog
+        run: node scripts/validate-games.mjs

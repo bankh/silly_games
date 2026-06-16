@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/bankh/silly_games/games/game.schema.json",
+  "title": "Silly Games — game.json",
+  "description": "Metadata for one game, placed at games/<id>/game.json. Add the id to hub/registry.json to publish it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "status"],
+  "properties": {
+    "title": { "type": "string", "minLength": 1, "maxLength": 40, "description": "Display name shown on the card and hero." },
+    "tagline": { "type": "string", "maxLength": 90, "description": "One-line hook." },
+    "description": { "type": "string", "maxLength": 400, "description": "A sentence or two shown on the featured hero." },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 24 },
+      "maxItems": 6,
+      "description": "Short labels, e.g. [\"2D\", \"Puzzle\"]."
+    },
+    "accent": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$", "description": "Hex accent color, e.g. #36c8ff." },
+    "thumb": { "type": "string", "description": "Card image path, RELATIVE to the game folder, e.g. docs/thumb.png." },
+    "hero": { "type": "string", "description": "Large featured image path, RELATIVE to the game folder." },
+    "featured": { "type": "boolean", "description": "If true, this game is shown in the hero banner (only one should be featured)." },
+    "status": { "type": "string", "enum": ["ready", "soon"], "description": "\"ready\" shows a playable card; \"soon\" shows a locked card." },
+    "author": { "type": "string", "maxLength": 60, "description": "Your name or GitHub handle." }
+  }
+}

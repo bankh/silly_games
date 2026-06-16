@@ -1,0 +1,9 @@
+node_modules/
+npm-debug.log*
+package-lock.json
+.DS_Store
+*.log
+
+# local / non-project files (reference images, scratch notes, etc.)
+# anchored to repo root so games/*/docs/ (real assets) stay tracked
+/docs/

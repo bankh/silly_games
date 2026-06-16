@@ -1,0 +1,9 @@
+{
+  "title": "My Game",
+  "tagline": "A one-line hook for your game.",
+  "description": "A sentence or two shown on the featured banner.",
+  "tags": ["2D", "Casual"],
+  "accent": "#36c8ff",
+  "status": "soon",
+  "author": "your-github-handle"
+}

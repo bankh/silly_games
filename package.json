@@ -1,0 +1,17 @@
+{
+  "name": "silly-games",
+  "version": "1.0.0",
+  "description": "Silly Games — a static browser-game arcade (Netflix-style hub). Starts with Crowd Ascent, a 3D crowd-runner. No build step.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node serve.js",
+    "serve": "node serve.js",
+    "dev": "node serve.js",
+    "validate": "node scripts/validate-games.mjs"
+  },
+  "keywords": ["games", "arcade", "threejs", "webgl", "github-pages"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  }
+}

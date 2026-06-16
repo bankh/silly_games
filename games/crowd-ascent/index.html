@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#10243e" />
+  <title>Crowd Ascent — 🦖</title>
+  <meta name="description" content="Crowd Ascent: rally an army up the Spiral Bastion and bury the Titan. A 3D crowd-runner that runs in your browser." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🦖</text></svg>" />
+
+  <!-- Three.js r160, vendored locally → no build step and no runtime CDN dependency -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="game-canvas"></canvas>
+
+    <!-- In-game HUD -->
+    <div id="hud" class="hidden">
+      <div class="hud-top">
+        <div id="count-badge" class="count-badge">
+          <span class="count-icon">🪖</span>
+          <span id="count-value">1</span>
+        </div>
+        <div class="hud-meta">
+          <div id="level-label">LEVEL 1</div>
+          <div id="best-label">BEST 0</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div id="progress-bar"></div>
+      </div>
+    </div>
+
+    <!-- Floating hint -->
+    <div id="steer-hint" class="steer-hint hidden">Drag / move • ← → to steer</div>
+
+    <!-- Boss bar -->
+    <div id="boss-ui" class="boss-ui hidden">
+      <div class="boss-name">TITAN OF VANTAL</div>
+      <div class="boss-bar-wrap"><div id="boss-bar"></div></div>
+    </div>
+
+    <!-- Screens -->
+    <div id="screen-start" class="screen">
+      <div class="panel">
+        <h1 class="title">CROWD <span>ASCENT</span></h1>
+        <p class="subtitle">🦖 Rally an army. Climb the Spiral Bastion. Bury the Titan.</p>
+        <ul class="how">
+          <li><b>Steer</b> with mouse / touch / ← →</li>
+          <li>Run through <b class="good">+N</b> and <b class="good">×N</b> gates to grow</li>
+          <li>Dodge <b class="bad">fire & red gates</b> — they cull your crowd</li>
+          <li>Throw your whole army at the <b>Titan</b> at the summit</li>
+        </ul>
+        <button id="btn-start" class="btn">▶ START</button>
+        <div class="best-line">Best army: <span id="start-best">0</span></div>
+      </div>
+    </div>
+
+    <div id="screen-win" class="screen hidden">
+      <div class="panel">
+        <h1 class="title win">VICTORY!</h1>
+        <p class="subtitle">The Titan falls beneath your horde.</p>
+        <div class="score-grid">
+          <div><span id="win-army">0</span><label>ARMY</label></div>
+          <div><span id="win-score">0</span><label>SCORE</label></div>
+          <div><span id="win-best">0</span><label>BEST</label></div>
+        </div>
+        <button id="btn-next" class="btn">▶ NEXT LEVEL</button>
+        <button id="btn-replay-win" class="btn ghost">↻ Replay level</button>
+      </div>
+    </div>
+
+    <div id="screen-lose" class="screen hidden">
+      <div class="panel">
+        <h1 class="title lose">DEFEATED</h1>
+        <p id="lose-reason" class="subtitle">Your crowd was scattered.</p>
+        <div class="score-grid">
+          <div><span id="lose-army">0</span><label>ARMY</label></div>
+          <div><span id="lose-best">0</span><label>BEST</label></div>
+        </div>
+        <button id="btn-retry" class="btn">↻ RETRY</button>
+      </div>
+    </div>
+
+    <div id="screen-pause" class="screen hidden">
+      <div class="panel">
+        <h1 class="title">PAUSED</h1>
+        <button id="btn-resume" class="btn">▶ RESUME</button>
+        <button id="btn-quit" class="btn ghost">⏹ Quit to menu</button>
+      </div>
+    </div>
+
+    <button id="btn-pause" class="icon-btn hidden" title="Pause (P)">⏸</button>
+    <button id="btn-mute" class="icon-btn mute hidden" title="Mute (M)">🔊</button>
+
+    <div id="loading" class="loading">Loading…</div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+  <script>
+    // Fallback: a static <script type="module"> fails to execute if the import map
+    // target (vendor/three.module.js) 404s or has a bad MIME type, so main.js's own
+    // try/catch never registers. This classic script runs independently and replaces
+    // the stuck "Loading…" overlay with a friendly message.
+    (function () {
+      function fail(msg) {
+        if (window.__game) return;
+        var l = document.getElementById("loading");
+        if (l) { l.textContent = msg; l.classList.remove("hidden"); }
+      }
+      setTimeout(function () { fail("Failed to load the 3D engine. Check your connection and reload."); }, 6000);
+      window.addEventListener("error", function () { fail("Something failed to load. Please reload the page."); });
+    })();
+  </script>
+  <noscript><div class="noscript">This game needs JavaScript enabled.</div></noscript>
+</body>
+</html>

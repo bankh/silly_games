@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--
+  Silly Games — game template.
+  Copy this folder to games/<your-game-id>/, build your game here, edit game.json,
+  then add "<your-game-id>" to ../../hub/registry.json. See ../../CONTRIBUTING.md.
+
+  Rules of the road:
+  • Keep everything self-contained inside this folder.
+  • Use RELATIVE paths only (so it works under the GitHub Pages sub-path).
+  • No backend / no server code — it must run as static files in the browser.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Game — Silly Games</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #0b0d12; color: #eaf2ff;
+      font-family: system-ui, sans-serif; display: grid; place-items: center; text-align: center; }
+    .back { position: fixed; top: 14px; left: 16px; color: #9fb8da; text-decoration: none; font-weight: 700; }
+    .back:hover { color: #fff; }
+    h1 { font-size: clamp(28px, 8vw, 56px); margin: 0 0 8px; }
+    button { margin-top: 18px; padding: 14px 28px; font-size: 18px; font-weight: 800;
+      color: #06203f; background: #ffcc33; border: 0; border-radius: 12px; cursor: pointer; }
+    #score { font-size: 22px; margin-top: 14px; color: #3fe06b; font-weight: 800; }
+  </style>
+</head>
+<body>
+  <a class="back" href="../../">← All Games</a>
+  <main>
+    <h1>🎮 My Game</h1>
+    <p>Replace this with your game. This template is a tiny clicker to prove the wiring.</p>
+    <div id="score">Score: 0</div>
+    <button id="btn">Click me</button>
+  </main>
+  <script>
+    let n = 0;
+    const score = document.getElementById("score");
+    document.getElementById("btn").addEventListener("click", () => {
+      score.textContent = "Score: " + (++n);
+    });
+  </script>
+</body>
+</html>

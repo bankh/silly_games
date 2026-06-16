@@ -1,0 +1,12 @@
+{
+  "title": "Crowd Ascent",
+  "tagline": "Rally an army. Climb the Spiral Bastion. Bury the Titan.",
+  "description": "A 3D crowd-runner. Grow a single recruit into a roaring horde by funneling through +N and ×N gates, dodge fire and red trap-gates, then hurl your whole army at a kaiju boss at the summit. Army size vs. boss health decides it.",
+  "tags": ["3D", "Crowd Runner", "Three.js", "Boss Fight"],
+  "accent": "#3fe06b",
+  "thumb": "docs/screenshot-play.png",
+  "hero": "docs/screenshot-boss.png",
+  "featured": true,
+  "status": "ready",
+  "author": "bankh"
+}
