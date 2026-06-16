@@ -33,8 +33,7 @@ scripts/validate-games.mjs     # catalog validator (runs in CI)
 serve.js                       # zero-dependency local server
 Makefile  package.json
 .github/workflows/             # deploy-pages.yml + validate.yml
-docs/                          # local-only, git-ignored (Docker files, scratch)
-  Dockerfile  nginx.conf  docker-compose.yml
+docs/                          # local-only, git-ignored (scratch / local notes)
 ```
 
 Each game lives in its own self-contained folder under `games/` (its own HTML/CSS/JS and
@@ -57,27 +56,6 @@ make serve                     # → http://localhost:8000   (make help lists ta
 ```
 
 Then open the URL — you'll land on the hub; click a game to play.
-
-## 🐳 Run it with Docker
-
-The Docker files live in **`docs/`** (a local-only, git-ignored folder), so run them from there:
-
-```bash
-cd docs
-docker compose up -d --build   # → http://localhost:8080
-docker compose down            # stop
-```
-
-Or from the repo root via make:
-
-```bash
-make docker-up                 # build + run  → http://localhost:8080
-make docker-down               # stop
-```
-
-> The Docker setup is a **local convenience** and is git-ignored, so it won't be in a fresh
-> clone. To run the site anywhere with no extra files, use `python3 -m http.server` or
-> `npm start` above.
 
 ---
 
