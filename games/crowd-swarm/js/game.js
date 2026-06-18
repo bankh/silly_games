@@ -16,6 +16,7 @@ const endBox = document.getElementById('endBox');
 const endText = document.getElementById('endText');
 const startBtn = document.getElementById('startBtn');
 const restartBtn = document.getElementById('restartBtn');
+const mathBtn = document.getElementById('mathBtn');
 
 // ---- world (much larger than the screen; a camera follows the player) ----
 const WORLD_W = 3600;
@@ -34,6 +35,10 @@ let running = false, over = false, last = 0;
 let tLeft = ROUND_TIME, score = 0;
 
 let keys = new Set();
+// Touch / mouse steering: when active the swarm heads toward the finger/cursor.
+// x,y are in CSS pixels (clientX/Y), which match screen space since the canvas
+// fills the viewport at 0,0. Keyboard, when pressed, takes priority over this.
+let pointer = { active: false, x: 0, y: 0, id: null };
 let player, neutrals, rivals, challenge = null;
 
 function resize() {
@@ -122,6 +127,7 @@ function reset() {
   panel.classList.add('hidden');
   endBox.classList.add('hidden');
   mathBox.classList.add('hidden');
+  mathBtn.classList.remove('hidden');
 }
 
 function askMath() {
@@ -181,6 +187,11 @@ function askMath() {
 startBtn.onclick = reset;
 restartBtn.onclick = reset;
 
+// On-screen math bonus — the touchscreen equivalent of pressing Space.
+mathBtn.addEventListener('click', () => {
+  if (running && !challenge) askMath();
+});
+
 window.addEventListener('keydown', e => {
   keys.add(e.key.toLowerCase());
   if (e.key === ' ' && running && !challenge) askMath();
@@ -189,6 +200,34 @@ window.addEventListener('keydown', e => {
 window.addEventListener('keyup', e => {
   keys.delete(e.key.toLowerCase());
 });
+
+// ---- touch / mouse steering (drag to send the swarm toward your finger) ----
+// Pointer capture + pointerId tracking means a finger sliding off-canvas (or a
+// second finger) can't leave the swarm stuck heading in one direction.
+canvas.addEventListener('pointerdown', e => {
+  pointer.active = true;
+  pointer.id = e.pointerId;
+  pointer.x = e.clientX;
+  pointer.y = e.clientY;
+  try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+});
+canvas.addEventListener('pointermove', e => {
+  if (!pointer.active || e.pointerId !== pointer.id) return;
+  if (e.pointerType === 'mouse' && e.buttons === 0) { endPointer(e); return; }
+  pointer.x = e.clientX;
+  pointer.y = e.clientY;
+});
+function endPointer(e) {
+  if (pointer.id !== null && e.pointerId !== pointer.id) return;
+  pointer.active = false;
+  pointer.id = null;
+  try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+}
+canvas.addEventListener('pointerup', endPointer);
+canvas.addEventListener('pointercancel', endPointer);
+canvas.addEventListener('lostpointercapture', endPointer);
+// Losing focus mid-drag (tab switch, etc.) shouldn't leave the swarm coasting.
+window.addEventListener('blur', () => { pointer.active = false; pointer.id = null; });
 
 // A bigger blob consumes a smaller one. Player and rivals share this rule.
 function consume(win, lose) {
@@ -221,6 +260,7 @@ function update(dt) {
     running = false;
     // Close any open math bonus so it can't linger over (or be answered after) the end screen.
     mathBox.classList.add('hidden');
+    mathBtn.classList.add('hidden');
     challenge = null;
   }
 
@@ -231,6 +271,16 @@ function update(dt) {
   if (keys.has('arrowright') || keys.has('d')) dx += 1;
   if (keys.has('arrowup') || keys.has('w')) dy -= 1;
   if (keys.has('arrowdown') || keys.has('s')) dy += 1;
+
+  // No key held? Steer toward the finger/cursor. The player sits at screen
+  // position (player - cam); a small dead-zone means a tap right on the swarm
+  // (or a still finger on it) holds position instead of jittering.
+  if (dx === 0 && dy === 0 && pointer.active) {
+    const tx = pointer.x - (player.x - camX);
+    const ty = pointer.y - (player.y - camY);
+    const tlen = Math.hypot(tx, ty);
+    if (tlen > 14) { dx = tx / tlen; dy = ty / tlen; }
+  }
 
   const plen = Math.hypot(dx, dy) || 1;
   const pr = radiusFor(player.n);

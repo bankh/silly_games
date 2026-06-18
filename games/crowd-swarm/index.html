@@ -18,6 +18,9 @@
       display: block;
       width: 100vw;
       height: 100vh;
+      /* let drags steer the swarm instead of scrolling/zooming the page */
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
     }
     #ui {
       position: fixed;
@@ -85,6 +88,19 @@
     .answers button {
       width: 100%;
     }
+    /* big, thumb-friendly math-bonus button for touchscreens (Space on a keyboard) */
+    .math-btn {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 99999;
+      pointer-events: auto;
+      touch-action: manipulation;
+      padding: 14px 24px;
+      font-size: 16px;
+      margin: 0;
+    }
   </style>
 </head>
 <body>
@@ -99,7 +115,7 @@
       <h1>CrowdSwarm</h1>
       <p>Roam a huge arena, swallow the cyan crowd to grow, and out-eat 9 rival swarms. Eat anyone smaller — flee anyone bigger. Top the leaderboard before time runs out.</p>
       <button id="startBtn">Start Game</button>
-      <p class="small">WASD / Arrow Keys to move • Space for a math bonus (+3) • watch the minimap</p>
+      <p class="small">Drag / touch to move (or WASD / Arrow Keys) • tap 🧮 or press Space for a math bonus (+3) • watch the minimap</p>
     </div>
 
     <div class="math-box hidden" id="mathBox">
@@ -112,6 +128,8 @@
       <p id="endText"></p>
       <button id="restartBtn">Play Again</button>
     </div>
+
+    <button id="mathBtn" class="math-btn hidden">🧮 Math +3</button>
   </div>
 
   <canvas id="game"></canvas>
