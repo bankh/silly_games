@@ -1,6 +1,8 @@
 {
   "$comment": "The Silly Games catalog. To add a game: create games/<id>/ (with index.html + game.json) and add its <id> to this list. Keep it alphabetical. See CONTRIBUTING.md.",
   "games": [
-    "crowd-ascent"
+    "crowd-ascent",
+    "crowd-swarm",
+    "township"
   ]
 }

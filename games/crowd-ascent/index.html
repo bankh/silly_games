@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Crowd Ascent. Copyright © 2026 Sinan Bank. All rights reserved. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -19,6 +20,12 @@
   </script>
 </head>
 <body>
+  <!-- back-to-hub link + copyright (bottom-left, above the high z-index of game screens) -->
+  <div style="position:fixed;left:14px;bottom:12px;z-index:99999;font-family:system-ui,sans-serif;">
+    <a href="../../" style="display:inline-block;color:#cfe0f5;text-decoration:none;font-weight:700;font-size:13px;background:rgba(0,0,0,.5);padding:7px 13px;border-radius:10px;backdrop-filter:blur(4px);">← All Games</a>
+    <div style="margin-top:6px;font-size:11px;color:rgba(255,255,255,.5);font-weight:600;pointer-events:none;">© 2026 Sinan Bank · Crowd Ascent</div>
+  </div>
+
   <div id="app">
     <canvas id="game-canvas"></canvas>
 

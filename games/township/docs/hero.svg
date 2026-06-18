@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Township">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bfe3ff"/>
+      <stop offset="0.5" stop-color="#cdeaf2"/>
+      <stop offset="1" stop-color="#a9d98c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1330" cy="170" r="80" fill="#ffe06b"/>
+  <circle cx="1330" cy="170" r="80" fill="#fff2a8" opacity="0.45"/>
+  <g fill="#ffffff" opacity="0.8">
+    <ellipse cx="360" cy="150" rx="90" ry="34"/>
+    <ellipse cx="430" cy="135" rx="70" ry="30"/>
+    <ellipse cx="1050" cy="120" rx="80" ry="30"/>
+  </g>
+
+  <!-- big isometric board centered -->
+  <g transform="translate(800,300) scale(2)">
+    <!-- grass field 4x4 with several crop fields + buildings -->
+    <g stroke="#4e8b35" stroke-width="1">
+      <polygon points="0,0 46,23 0,46 -46,23" fill="#79bd54"/>
+      <polygon points="46,23 92,46 46,69 0,46" fill="#6fb14b"/>
+      <polygon points="-46,23 0,46 -46,69 -92,46" fill="#6fb14b"/>
+      <polygon points="92,46 138,69 92,92 46,69" fill="#79bd54"/>
+      <polygon points="138,69 184,92 138,115 92,92" fill="#6fb14b"/>
+      <polygon points="0,46 46,69 0,92 -46,69" fill="#79bd54"/>
+      <polygon points="-92,46 -46,69 -92,92 -138,69" fill="#79bd54"/>
+      <polygon points="-138,69 -92,92 -138,115 -184,92" fill="#6fb14b"/>
+      <polygon points="92,92 138,115 92,138 46,115" fill="#79bd54"/>
+      <polygon points="-46,115 0,138 -46,161 -92,138" fill="#79bd54"/>
+    </g>
+    <!-- tilled field tiles -->
+    <g stroke="#3c2614" stroke-width="1">
+      <polygon points="46,69 92,92 46,115 0,92" fill="#7a5230"/>
+      <polygon points="-46,69 0,92 -46,115 -92,92" fill="#7a5230"/>
+      <polygon points="0,92 46,115 0,138 -46,115" fill="#7a5230"/>
+      <polygon points="0,138 46,161 0,184 -46,161" fill="#7a5230"/>
+    </g>
+    <!-- crops -->
+    <text x="46" y="100" font-size="30" text-anchor="middle">🌽</text>
+    <text x="-46" y="100" font-size="30" text-anchor="middle">🥕</text>
+    <text x="0" y="123" font-size="30" text-anchor="middle">🌾</text>
+    <text x="0" y="169" font-size="30" text-anchor="middle">🍅</text>
+
+    <!-- house (back-left) -->
+    <g transform="translate(-92,38)">
+      <polygon points="0,18 38,0 38,-30 0,-12" fill="#cfc6b0"/>
+      <polygon points="0,18 -38,0 -38,-30 0,-12" fill="#b9af96"/>
+      <polygon points="0,-12 38,-30 0,-48 -38,-30" fill="#d2553f"/>
+      <text x="0" y="-18" font-size="26" text-anchor="middle">🏠</text>
+    </g>
+    <!-- house (back-right) -->
+    <g transform="translate(92,38)">
+      <polygon points="0,18 38,0 38,-30 0,-12" fill="#cfc6b0"/>
+      <polygon points="0,18 -38,0 -38,-30 0,-12" fill="#b9af96"/>
+      <polygon points="0,-12 38,-30 0,-48 -38,-30" fill="#d2553f"/>
+      <text x="0" y="-18" font-size="26" text-anchor="middle">🏠</text>
+    </g>
+    <!-- tree -->
+    <text x="138" y="84" font-size="34" text-anchor="middle">🌳</text>
+  </g>
+
+  <!-- delivery helicopter -->
+  <text x="320" y="360" font-size="86" text-anchor="middle">🚁</text>
+
+  <text x="800" y="760" font-size="120" font-weight="900" text-anchor="middle"
+        font-family="Nunito, system-ui, sans-serif" fill="#1f3a16">Township</text>
+  <text x="800" y="820" font-size="40" font-weight="700" text-anchor="middle"
+        font-family="Nunito, system-ui, sans-serif" fill="#2f5a23">Plant · Harvest · Deliver · Grow your town</text>
+</svg>

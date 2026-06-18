@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+  Township — an isometric farm/town builder for the Silly Games hub.
+  100% client-side: vanilla ES modules + Canvas, saves to localStorage.
+  Relative paths only (served under /silly_games/games/township/).
+  Copyright © 2026 Sinan Bank. All rights reserved.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#7ec850" />
+  <title>Township — Silly Games</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <a class="back" href="../../">← All Games</a>
+
+  <canvas id="scene"></canvas>
+
+  <!-- top HUD -->
+  <header id="hud">
+    <div class="stat"><span class="ic">🪙</span><b id="hud-coins">0</b></div>
+    <div class="stat level">
+      <span class="lvl-badge" id="hud-lvl">Lv 1</span>
+      <div class="xpbar"><div class="xpfill" id="hud-xpfill"></div></div>
+      <span class="xp-text" id="hud-xp">0/0 XP</span>
+    </div>
+    <div class="stat"><span class="ic">👪</span><b id="hud-pop">0</b></div>
+    <div class="stat barn"><span class="ic">🛖</span><b id="hud-barn">0/40</b></div>
+  </header>
+
+  <!-- zoom controls (touch-friendly) -->
+  <div id="zoom">
+    <button id="zoom-in" aria-label="Zoom in">＋</button>
+    <button id="zoom-out" aria-label="Zoom out">－</button>
+  </div>
+
+  <!-- helicopter orders -->
+  <div id="orders" class="dock"></div>
+
+  <!-- bottom toolbar -->
+  <nav id="toolbar">
+    <button id="tb-build"><span>🔨</span>Build</button>
+    <button id="tb-barn"><span>🛖</span>Barn</button>
+    <button id="tb-plantall"><span>🌱</span>Plant All</button>
+    <button id="tb-harvestall"><span>🧺</span>Harvest</button>
+    <button id="tb-menu"><span>⚙️</span></button>
+  </nav>
+
+  <!-- panels -->
+  <section id="shop" class="panel hidden">
+    <div class="panel-head"><h2>🔨 Build</h2><button class="x" data-close>×</button></div>
+    <div id="shop-list" class="panel-body"></div>
+  </section>
+
+  <section id="barnPanel" class="panel hidden">
+    <div class="panel-head"><h2>🛖 Barn</h2><button class="x" data-close>×</button></div>
+    <div id="barn-list" class="panel-body"></div>
+  </section>
+
+  <section id="menu" class="panel hidden">
+    <div class="panel-head"><h2>⚙️ Town Hall</h2><button class="x" data-close>×</button></div>
+    <div class="panel-body">
+      <p class="muted">Build a thriving town: plant crops, harvest them, then deliver
+        goods to fill helicopter orders for 🪙 and XP. Level up to unlock new crops and
+        buildings. Houses grow your 👪 population, which boosts order pay.</p>
+      <p class="muted">Drag to pan · scroll / ＋－ to zoom · tap a field to plant or harvest.</p>
+      <button id="menu-reset" class="danger">🗑️ Start a new town</button>
+      <p class="muted" style="margin-top:14px;opacity:.6;font-size:12px;">© 2026 Sinan Bank · Township. All rights reserved.</p>
+    </div>
+  </section>
+
+  <!-- crop picker popover -->
+  <div id="picker" class="popover hidden"></div>
+
+  <!-- transient -->
+  <div id="hint" class="hint hidden"></div>
+  <div id="toasts"></div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

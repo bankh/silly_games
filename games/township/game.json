@@ -1,0 +1,12 @@
+{
+  "title": "Township",
+  "tagline": "Plant, harvest, deliver — grow a cozy isometric town.",
+  "description": "A bite-size Township-style farm & city builder. Plant crops on an isometric board, harvest them on real timers, then fill helicopter orders for coins and XP. Level up to unlock new crops and buildings, raise houses to grow your population, and expand your barn. Everything saves to your browser.",
+  "tags": ["2D", "Isometric", "Farming", "City Builder", "Idle"],
+  "accent": "#7ec850",
+  "thumb": "docs/thumb.svg",
+  "hero": "docs/hero.svg",
+  "featured": false,
+  "status": "ready",
+  "author": "Sinan Bank"
+}

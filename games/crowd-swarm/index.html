@@ -1,0 +1,127 @@
+<!doctype html>
+<!-- CrowdSwarm. Copyright © 2026 Atlas Bank. All rights reserved. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CrowdSwarm</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0d1320;
+      font-family: system-ui, sans-serif;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    #ui {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      color: white;
+    }
+    .hud {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      gap: 16px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 10px 14px;
+      border-radius: 14px;
+      backdrop-filter: blur(8px);
+    }
+    .hud .label {
+      opacity: 0.7;
+      margin-right: 6px;
+    }
+    .panel, .math-box, .end-box {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 18, 32, 0.92);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 22px;
+      width: min(90vw, 420px);
+      text-align: center;
+      pointer-events: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      color: white;
+    }
+    .panel h1, .end-box h2 {
+      margin-top: 0;
+    }
+    button {
+      pointer-events: auto;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #77e4ff, #7dffb2);
+      color: #08101d;
+      cursor: pointer;
+      margin: 6px;
+    }
+    .small {
+      opacity: 0.75;
+      font-size: 14px;
+    }
+    .hidden {
+      display: none;
+    }
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .answers button {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="ui">
+    <div class="hud">
+      <div><span class="label">Score</span><span id="score">0</span></div>
+      <div><span class="label">Size</span><span id="size">1</span></div>
+      <div><span class="label">Time</span><span id="time">5:00</span></div>
+    </div>
+
+    <div class="panel" id="panel">
+      <h1>CrowdSwarm</h1>
+      <p>Roam a huge arena, swallow the cyan crowd to grow, and out-eat 9 rival swarms. Eat anyone smaller — flee anyone bigger. Top the leaderboard before time runs out.</p>
+      <button id="startBtn">Start Game</button>
+      <p class="small">WASD / Arrow Keys to move • Space for a math bonus (+3) • watch the minimap</p>
+    </div>
+
+    <div class="math-box hidden" id="mathBox">
+      <div id="mathPrompt"></div>
+      <div class="answers" id="answers"></div>
+    </div>
+
+    <div class="end-box hidden" id="endBox">
+      <h2>Round Over</h2>
+      <p id="endText"></p>
+      <button id="restartBtn">Play Again</button>
+    </div>
+  </div>
+
+  <canvas id="game"></canvas>
+
+  <!-- back-to-hub link + copyright (bottom-left, clear of HUD / leaderboard / minimap) -->
+  <div style="position:fixed;left:12px;bottom:10px;z-index:99999;font-family:system-ui,sans-serif;">
+    <a href="../../" style="display:inline-block;color:#cfe0f5;text-decoration:none;font-weight:700;font-size:13px;background:rgba(0,0,0,.45);padding:7px 13px;border-radius:10px;backdrop-filter:blur(4px);">← All Games</a>
+    <div style="margin-top:6px;font-size:11px;color:rgba(255,255,255,.45);font-weight:600;pointer-events:none;">© 2026 Atlas Bank · CrowdSwarm</div>
+  </div>
+
+  <script src="js/game.js"></script>
+</body>
+</html>

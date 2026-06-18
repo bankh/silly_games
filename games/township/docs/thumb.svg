@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400" role="img" aria-label="Township">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bfe3ff"/>
+      <stop offset="0.55" stop-color="#cdeaf2"/>
+      <stop offset="1" stop-color="#a9d98c"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#sky)"/>
+  <circle cx="510" cy="78" r="40" fill="#ffe06b"/>
+  <circle cx="510" cy="78" r="40" fill="#fff2a8" opacity="0.5"/>
+
+  <!-- isometric tile field: 4x4 diamonds -->
+  <g transform="translate(300,150)">
+    <!-- helper tiles drawn back-to-front; tw=92 th=46 -->
+    <g stroke="#4e8b35" stroke-width="1">
+      <!-- row generation done by hand for a 4x4 grid -->
+      <!-- We draw grass tiles, plus a few fields and a house. -->
+    </g>
+    <!-- grass + field tiles -->
+    <!-- tile (gx,gy): cx=(gx-gy)*46, cy=(gx+gy)*23 -->
+    <!-- grass -->
+    <g>
+      <!-- back grass -->
+      <polygon points="0,0 46,23 0,46 -46,23" fill="#79bd54" stroke="#4e8b35"/>
+      <polygon points="46,23 92,46 46,69 0,46" fill="#6fb14b" stroke="#4e8b35"/>
+      <polygon points="-46,23 0,46 -46,69 -92,46" fill="#6fb14b" stroke="#4e8b35"/>
+      <polygon points="92,46 138,69 92,92 46,69" fill="#79bd54" stroke="#4e8b35"/>
+      <polygon points="0,46 46,69 0,92 -46,69" fill="#79bd54" stroke="#4e8b35"/>
+      <polygon points="-92,46 -46,69 -92,92 -138,69" fill="#79bd54" stroke="#4e8b35"/>
+      <!-- field tiles (tilled soil) -->
+      <polygon points="46,69 92,92 46,115 0,92" fill="#7a5230" stroke="#3c2614"/>
+      <polygon points="-46,69 0,92 -46,115 -92,92" fill="#7a5230" stroke="#3c2614"/>
+      <polygon points="0,92 46,115 0,138 -46,115" fill="#7a5230" stroke="#3c2614"/>
+    </g>
+    <!-- crops on the fields -->
+    <text x="46" y="98" font-size="30" text-anchor="middle">🌽</text>
+    <text x="-46" y="98" font-size="30" text-anchor="middle">🥕</text>
+    <text x="0" y="121" font-size="30" text-anchor="middle">🌾</text>
+
+    <!-- a house on a back grass tile -->
+    <g transform="translate(0,8)">
+      <polygon points="0,18 38,0 38,-30 0,-12" fill="#cfc6b0"/>
+      <polygon points="0,18 -38,0 -38,-30 0,-12" fill="#b9af96"/>
+      <polygon points="0,-12 38,-30 0,-48 -38,-30" fill="#d2553f"/>
+      <text x="0" y="-18" font-size="26" text-anchor="middle">🏠</text>
+    </g>
+  </g>
+
+  <text x="300" y="350" font-size="46" font-weight="900" text-anchor="middle"
+        font-family="Nunito, system-ui, sans-serif" fill="#1f3a16">Township</text>
+  <text x="300" y="378" font-size="17" font-weight="700" text-anchor="middle"
+        font-family="Nunito, system-ui, sans-serif" fill="#2f5a23">Plant · Harvest · Deliver</text>
+</svg>

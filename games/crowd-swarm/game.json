@@ -1,0 +1,11 @@
+{
+  "title": "CrowdSwarm",
+  "tagline": "Grow your crowd, solve math bonuses, and outsize the others.",
+  "description": "A fast browser crowd game with math challenges and morphing organic movement. Collect people, beat smaller crowds, and solve math bonus gates to grow your swarm.",
+  "tags": ["2D", "Arcade", "Educational", "Math"],
+  "accent": "#77e4ff",
+  "thumb": "docs/thumb.svg",
+  "featured": false,
+  "status": "ready",
+  "author": "Atlas Bank"
+}
