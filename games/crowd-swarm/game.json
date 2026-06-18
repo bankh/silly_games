@@ -7,5 +7,6 @@
   "thumb": "docs/thumb.svg",
   "featured": false,
   "status": "ready",
-  "author": "Atlas Bank"
+  "author": "Atlas Bank",
+  "leaderboard": { "label": "Score", "order": "desc", "max": 25 }
 }

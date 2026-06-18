@@ -28,6 +28,11 @@ async function loadCatalog() {
       try {
         const m = await fetchJSON(`games/${id}/game.json`);
         const path = `games/${id}/`;
+        // Pull the committed global board only for opt-in games — and only if the
+        // shared helper actually loaded. A leaderboard hiccup must NEVER drop the game
+        // from the catalog (that's what hid crowd-swarm from a stale page).
+        const hasLB = typeof SillyLeaderboard !== "undefined";
+        const scores = (m.leaderboard && hasLB) ? await SillyLeaderboard.loadScores(`games/${id}/scores.json`) : [];
         return {
           id,
           path,
@@ -40,6 +45,8 @@ async function loadCatalog() {
           hero: m.hero ? path + m.hero : null,
           featured: !!m.featured,
           status: m.status || "ready",
+          leaderboard: (m.leaderboard && hasLB) ? m.leaderboard : null,
+          scores,
         };
       } catch (e) {
         console.warn(`Skipping game '${id}':`, e.message);
@@ -93,6 +100,12 @@ function renderCard(game) {
   body.appendChild(el("h3", "card-title", escapeHtml(game.title)));
   if (game.tagline) body.appendChild(el("p", "card-tagline", escapeHtml(game.tagline)));
   body.appendChild(el("div", "card-tags", tagPills(game.tags, game.accent)));
+  if (game.leaderboard) {
+    const top = SillyLeaderboard.sort(game.scores || [], game.leaderboard.order || "desc")[0];
+    body.appendChild(el("p", "card-topscore", top
+      ? `🏆 ${escapeHtml(top.name)} — <b>${escapeHtml(top.score)}</b>`
+      : "🏆 No scores yet — be the first!"));
+  }
   card.appendChild(body);
 
   if (ready) {
@@ -100,7 +113,17 @@ function renderCard(game) {
     a.href = game.path;
     a.setAttribute("aria-label", `Play ${game.title}`);
     card.appendChild(a);
-  } else {
+  }
+  // Trophy sits above the full-card play link (z-index) so it opens the board instead.
+  if (game.leaderboard) {
+    const tb = el("button", "card-trophy", "🏆");
+    tb.title = `${game.title} leaderboard`;
+    tb.setAttribute("aria-label", `${game.title} leaderboard`);
+    tb.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); openLeaderboard(game); });
+    card.appendChild(tb);
+  }
+
+  if (!ready) {
     card.appendChild(el("div", "card-soon-badge", "SOON"));
   }
   return card;
@@ -134,6 +157,41 @@ function renderRow(title, games) {
   track.appendChild(renderContributeCard());
   row.appendChild(track);
   return row;
+}
+
+// ---------- leaderboard modal ----------
+function ensureModal() {
+  let m = document.getElementById("lb-modal");
+  if (m) return m;
+  m = el("div", "lb-modal");
+  m.id = "lb-modal";
+  m.innerHTML =
+    `<div class="lb-modal-card" role="dialog" aria-modal="true">` +
+    `<button class="lb-modal-x" aria-label="Close">✕</button>` +
+    `<h2 class="lb-modal-title"></h2>` +
+    `<div class="lb-modal-body"></div>` +
+    `<a class="lb-modal-play btn-play" href="#">▶ PLAY</a>` +
+    `</div>`;
+  m.addEventListener("click", (e) => { if (e.target === m) closeModal(); });
+  m.querySelector(".lb-modal-x").addEventListener("click", closeModal);
+  window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+  document.body.appendChild(m);
+  return m;
+}
+function closeModal() {
+  const m = document.getElementById("lb-modal");
+  if (m) m.classList.remove("open");
+}
+function openLeaderboard(game) {
+  const m = ensureModal();
+  m.querySelector(".lb-modal-title").textContent = `🏆 ${game.title}`;
+  m.querySelector(".lb-modal-play").href = game.path;
+  SillyLeaderboard.renderBoard(m.querySelector(".lb-modal-body"), {
+    entries: game.scores || [],
+    order: (game.leaderboard && game.leaderboard.order) || "desc",
+    label: (game.leaderboard && game.leaderboard.label) || "Score",
+  });
+  m.classList.add("open");
 }
 
 // ---------- boot ----------

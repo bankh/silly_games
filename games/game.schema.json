@@ -21,6 +21,16 @@
     "hero": { "type": "string", "description": "Large featured image path, RELATIVE to the game folder." },
     "featured": { "type": "boolean", "description": "If true, this game is shown in the hero banner (only one should be featured)." },
     "status": { "type": "string", "enum": ["ready", "soon"], "description": "\"ready\" shows a playable card; \"soon\" shows a locked card." },
-    "author": { "type": "string", "maxLength": 60, "description": "Your name or GitHub handle." }
+    "author": { "type": "string", "maxLength": 60, "description": "Your name or GitHub handle." },
+    "leaderboard": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Opt-in global leaderboard. Scores live in games/<id>/scores.json and are added by reviewing screenshot-backed submission issues.",
+      "properties": {
+        "label": { "type": "string", "maxLength": 24, "description": "What the number means, e.g. \"Score\" or \"Time\"." },
+        "order": { "type": "string", "enum": ["desc", "asc"], "description": "\"desc\" = higher is better (default); \"asc\" = lower is better (e.g. fastest time)." },
+        "max": { "type": "integer", "minimum": 1, "maximum": 100, "description": "How many top entries the board shows (default 25)." }
+      }
+    }
   }
 }

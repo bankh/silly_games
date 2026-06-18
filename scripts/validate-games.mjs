@@ -29,6 +29,10 @@ const exists = (rel) => fs.existsSync(path.join(ROOT, rel));
 const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 const HEX_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 const STATUSES = ["ready", "soon"];
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;       // YYYY-MM-DD on a global-board entry
+const CODE_RE = /^[A-Z0-9]{1,8}$/;           // per-run verification code stamped on the proof
+const ORDERS = ["desc", "asc"];
+const MAX_SCORES = 200;                       // sanity cap per game's scores.json
 
 // ---- registry ----
 let ids = [];
@@ -83,6 +87,40 @@ for (const id of ids || []) {
       if (typeof m[key] !== "string") { err(`${dir}/game.json: "${key}" must be a path string.`); continue; }
       if (path.isAbsolute(m[key]) || m[key].includes("..")) err(`${dir}/game.json: "${key}" must be a relative path inside the game folder.`);
       else if (!exists(`${dir}/${m[key]}`)) err(`${dir}/game.json: "${key}" → ${dir}/${m[key]} does not exist.`);
+    }
+  }
+
+  // optional leaderboard config
+  if (m.leaderboard != null) {
+    const lb = m.leaderboard;
+    if (typeof lb !== "object" || Array.isArray(lb)) err(`${dir}/game.json: "leaderboard" must be an object.`);
+    else {
+      if (lb.label != null && (typeof lb.label !== "string" || lb.label.length > 24)) err(`${dir}/game.json: "leaderboard.label" must be a string <= 24 chars.`);
+      if (lb.order != null && !ORDERS.includes(lb.order)) err(`${dir}/game.json: "leaderboard.order" must be one of ${ORDERS.join(", ")}.`);
+      if (lb.max != null && (!Number.isInteger(lb.max) || lb.max < 1 || lb.max > 100)) err(`${dir}/game.json: "leaderboard.max" must be an integer 1..100.`);
+    }
+  }
+
+  // optional scores.json (the committed global board — added by reviewing submission issues)
+  if (exists(`${dir}/scores.json`)) {
+    if (m.leaderboard == null) warn(`${dir}/scores.json exists but game.json has no "leaderboard" block (the board won't render).`);
+    let scores;
+    try { scores = readJSON(`${dir}/scores.json`); }
+    catch (e) { err(`${dir}/scores.json: invalid JSON (${e.message}).`); scores = null; }
+    if (scores != null) {
+      if (!Array.isArray(scores)) err(`${dir}/scores.json: must be an array of score entries.`);
+      else {
+        if (scores.length > MAX_SCORES) err(`${dir}/scores.json: ${scores.length} entries exceeds the ${MAX_SCORES} cap.`);
+        scores.forEach((s, i) => {
+          const at = `${dir}/scores.json[${i}]`;
+          if (typeof s !== "object" || s === null || Array.isArray(s)) { err(`${at}: must be an object.`); return; }
+          if (typeof s.name !== "string" || s.name.length < 1 || s.name.length > 24) err(`${at}: "name" must be a string 1..24 chars.`);
+          if (typeof s.score !== "number" || !Number.isFinite(s.score)) err(`${at}: "score" must be a finite number.`);
+          if (typeof s.date !== "string" || !DATE_RE.test(s.date)) err(`${at}: "date" must be "YYYY-MM-DD".`);
+          if (typeof s.code !== "string" || !CODE_RE.test(s.code)) err(`${at}: "code" must be 1..8 chars of A-Z/0-9 (the run's verification code).`);
+          if (s.issue != null && (!Number.isInteger(s.issue) || s.issue < 1)) err(`${at}: "issue" must be a positive integer (the submission issue #).`);
+        });
+      }
     }
   }
 }

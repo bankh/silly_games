@@ -1,0 +1,67 @@
+name: 🏆 Global score submission
+description: Submit a score to a game's global leaderboard (proof screenshot required).
+title: "[score] "
+labels: ["leaderboard"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submit your high score to a game's **global** board.
+
+        A maintainer reviews every entry against your screenshot before it's added, so your
+        **proof image must clearly show your score and the verification code** from the game's
+        end screen. The game's "📸 Save proof" button creates that image for you.
+
+        > Note: a screenshot makes cheating *annoying*, not impossible — entries are accepted at
+        > the reviewer's discretion.
+  - type: dropdown
+    id: game
+    attributes:
+      label: Game
+      options:
+        - CrowdSwarm
+        - Crowd Ascent
+        - Township
+    validations:
+      required: true
+  - type: input
+    id: playername
+    attributes:
+      label: Name for the board
+      description: Up to 24 characters — this is what shows on the leaderboard.
+    validations:
+      required: true
+  - type: input
+    id: score
+    attributes:
+      label: Score
+    validations:
+      required: true
+  - type: input
+    id: rundate
+    attributes:
+      label: Date of the run (YYYY-MM-DD)
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: Verification code
+      description: The short code shown on the end screen and stamped on your proof image.
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: Proof screenshot
+      description: Drag-and-drop or paste your proof image here. It must show the score and the matching verification code.
+      placeholder: Paste your proof image here…
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirm
+      options:
+        - label: My proof image clearly shows the score and the matching verification code above.
+          required: true

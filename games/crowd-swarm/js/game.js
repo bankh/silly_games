@@ -17,6 +17,17 @@ const endText = document.getElementById('endText');
 const startBtn = document.getElementById('startBtn');
 const restartBtn = document.getElementById('restartBtn');
 const mathBtn = document.getElementById('mathBtn');
+const globalBoard = document.getElementById('globalBoard');
+const playerName = document.getElementById('playerName');
+const proofBtn = document.getElementById('proofBtn');
+const submitBtn = document.getElementById('submitBtn');
+const stampScore = document.getElementById('stampScore');
+const stampDate = document.getElementById('stampDate');
+const stampCode = document.getElementById('stampCode');
+
+// ---- leaderboard (local-first; opt-in screenshot-gated global board) ----
+const GAME_ID = 'crowd-swarm';
+const GAME_TITLE = 'CrowdSwarm';
 
 // ---- world (much larger than the screen; a camera follows the player) ----
 const WORLD_W = 3600;
@@ -33,6 +44,10 @@ let W = 0, H = 0, dpr = 1;
 let camX = 0, camY = 0;
 let running = false, over = false, last = 0;
 let tLeft = ROUND_TIME, score = 0;
+
+let globalScores = [];   // committed global board, read once (only changes on deploy)
+let lastRun = null;      // { score, code, date } of the round just ended, for proof + submit
+SillyLeaderboard.loadScores('scores.json').then(s => { globalScores = s; });
 
 let keys = new Set();
 // Touch / mouse steering: when active the swarm heads toward the finger/cursor.
@@ -190,6 +205,27 @@ restartBtn.onclick = reset;
 // On-screen math bonus — the touchscreen equivalent of pressing Space.
 mathBtn.addEventListener('click', () => {
   if (running && !challenge) askMath();
+});
+
+// Save the stamped proof image (canvas + score/date/code banner) for the submission.
+proofBtn.addEventListener('click', () => {
+  if (!lastRun) return;
+  SillyLeaderboard.saveProof(canvas, {
+    gameTitle: GAME_TITLE, label: 'Score',
+    score: lastRun.score, code: lastRun.code, date: lastRun.date,
+  });
+});
+
+// Open the prefilled submission issue; the player attaches the proof image there.
+submitBtn.addEventListener('click', () => {
+  if (!lastRun) return;
+  const name = (playerName.value || '').trim().slice(0, 24) || 'Anonymous';
+  try { localStorage.setItem('silly:name', name); } catch (_) {}
+  const url = SillyLeaderboard.buildIssueURL({
+    gameTitle: GAME_TITLE, name,
+    score: lastRun.score, code: lastRun.code, date: lastRun.date,
+  });
+  window.open(url, '_blank', 'noopener');
 });
 
 window.addEventListener('keydown', e => {
@@ -406,7 +442,24 @@ function update(dt) {
     endBox.classList.remove('hidden');
     const ranking = [player, ...rivals].slice().sort((p, q) => q.n - p.n);
     const rank = ranking.indexOf(player) + 1;
-    endText.textContent = `You finished #${rank} of ${ranking.length} • Crowd size: ${player.n} • Score: ${Math.floor(score)}`;
+    const finalScore = Math.floor(score);
+
+    // Finalize the round once: stamp a verification code, record the local best,
+    // and render the global board. (This block runs only on the frame time hits 0,
+    // since update() returns early while !running.)
+    lastRun = { score: finalScore, code: SillyLeaderboard.makeCode(), date: SillyLeaderboard.today() };
+    const rec = SillyLeaderboard.recordLocal(GAME_ID, finalScore, 'desc');
+
+    endText.textContent = `You finished #${rank} of ${ranking.length} • Crowd size: ${player.n} • Score: ${finalScore}`
+      + (rec.isNew ? ' 🎉 New personal best!' : '');
+    stampScore.textContent = finalScore;
+    stampDate.textContent = lastRun.date;
+    stampCode.textContent = lastRun.code;
+    try { const saved = localStorage.getItem('silly:name'); if (saved && !playerName.value) playerName.value = saved; } catch (_) {}
+
+    SillyLeaderboard.renderBoard(globalBoard, {
+      entries: globalScores, order: 'desc', label: 'Score', localBest: rec.best,
+    });
   }
 }
 

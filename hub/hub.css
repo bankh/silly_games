@@ -151,7 +151,41 @@ a { text-decoration: none; color: inherit; }
 .card-title { font-size: 19px; font-weight: 900; }
 .card-tagline { color: var(--muted); font-size: 13px; margin: 6px 0 10px; line-height: 1.4; }
 .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.card-topscore { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+.card-topscore b { color: #bfe3ff; }
 .card-link { position: absolute; inset: 0; z-index: 2; }
+
+/* trophy → opens the leaderboard; sits above the full-card play link */
+.card-trophy {
+  position: absolute; top: 10px; right: 10px; z-index: 3;
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(8,11,17,0.6); color: #ffcf5a;
+  font-size: 17px; line-height: 1; cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+.card-trophy:hover { background: rgba(8,11,17,0.85); transform: scale(1.08); }
+
+/* leaderboard modal */
+.lb-modal {
+  position: fixed; inset: 0; z-index: 50;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(4,7,12,0.7); padding: 20px;
+}
+.lb-modal.open { display: flex; }
+.lb-modal-card {
+  position: relative; width: min(92vw, 440px); max-height: 86vh; overflow-y: auto;
+  background: var(--bg-2); border: 1px solid #283246; border-radius: 18px;
+  padding: 22px; box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+}
+.lb-modal-title { font-size: 22px; font-weight: 900; margin-bottom: 14px; padding-right: 32px; }
+.lb-modal-x {
+  position: absolute; top: 14px; right: 14px;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 0; background: rgba(255,255,255,0.08); color: var(--ink);
+  font-size: 14px; cursor: pointer;
+}
+.lb-modal-play { display: inline-block; margin-top: 16px; }
 
 .card-soon { opacity: 0.72; }
 .card-soon:hover { transform: none; box-shadow: none; }
