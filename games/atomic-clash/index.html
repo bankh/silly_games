@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!-- Atomic Clash. Copyright © 2026 Atlas Bank. All rights reserved.
+     One game, two modes:
+       • Sort  — a 3D periodic table you rebuild from a shuffled cloud of element cards.
+       • Match — a flip-pairs memory board built from the same element cards.
+     Self-contained static files; shared element art/data live in ../../shared/elements/. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0b0d12" />
+  <title>Atomic Clash — ⚛️</title>
+  <meta name="description" content="Atomic Clash: rebuild the periodic table in 3D from a shuffled card cloud, or test your memory with element flip-pairs. Runs in your browser." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="../../shared/leaderboard.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>⚛️</text></svg>" />
+
+  <!-- Three.js r160, vendored locally → no build step, no runtime CDN dependency -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- back-to-hub link + copyright (bottom-left, above the game screens) -->
+  <div class="corner">
+    <a href="../../" class="back-link">← All Games</a>
+    <div class="copy">© 2026 Atlas Bank · Atomic Clash</div>
+  </div>
+
+  <div id="app">
+    <!-- 3D Sort mode renders here -->
+    <canvas id="stage-canvas"></canvas>
+    <!-- 2D Match mode renders here -->
+    <div id="match-root" class="hidden"></div>
+
+    <!-- In-game HUD -->
+    <div id="hud" class="hidden">
+      <div class="hud-left">
+        <span id="hud-mode" class="hud-chip">SORT</span>
+        <span id="hud-tier" class="hud-chip ghost">20</span>
+      </div>
+      <div class="hud-center">
+        <span id="hud-stat" class="hud-stat">0 / 20</span>
+      </div>
+      <div class="hud-right">
+        <span id="hud-timer" class="hud-stat">0:00</span>
+        <button id="btn-quit" class="icon-btn" title="Quit to menu">⏏</button>
+      </div>
+    </div>
+
+    <!-- Sort mode: the picked-up card, zoomed as a 2D overlay on the left (not in the 3D scene) -->
+    <div id="held-card" class="held-card">
+      <img id="held-img" alt="" draggable="false" />
+      <div id="held-cap" class="held-cap"></div>
+    </div>
+
+    <!-- On completion: celebrate while the finished board stays visible (results come after). -->
+    <div id="celebrate" class="celebrate hidden">
+      <div id="celebrate-text" class="celebrate-text"></div>
+      <button id="btn-see-results" class="btn">See results ▶</button>
+      <div class="celebrate-note">The board stays — drag to admire it.</div>
+    </div>
+
+    <div id="hint" class="hint hidden"></div>
+
+    <!-- Menu -->
+    <div id="screen-menu" class="screen">
+      <div class="panel">
+        <h1 class="title">ATOMIC <span>CLASH</span></h1>
+        <p class="subtitle">⚛️ Rebuild the periodic table — or match it from memory.</p>
+
+        <div class="chooser">
+          <div class="chooser-label">MODE</div>
+          <div class="opt-row" id="mode-row">
+            <button class="opt mode-opt selected" data-mode="sort">
+              <span class="opt-emoji">🧩</span><span class="opt-name">Sort the Table</span>
+              <span class="opt-sub">3D · place every card</span>
+            </button>
+            <button class="opt mode-opt" data-mode="match">
+              <span class="opt-emoji">🧠</span><span class="opt-name">Memory Match</span>
+              <span class="opt-sub">flip & find pairs</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="chooser">
+          <div class="chooser-label" id="tier-label">ELEMENTS</div>
+          <div class="opt-row tiers" id="tier-row">
+            <button class="opt tier-opt selected" data-tier="20">20</button>
+            <button class="opt tier-opt" data-tier="40">40</button>
+            <button class="opt tier-opt" data-tier="80">80</button>
+            <button class="opt tier-opt" data-tier="118">118</button>
+          </div>
+        </div>
+
+        <div class="chooser">
+          <div class="chooser-label">SET</div>
+          <div class="opt-row" id="pick-row">
+            <button class="opt pick-opt selected" data-pick="fixed">
+              <span class="opt-name">Fixed</span>
+              <span class="opt-sub">first N by number</span>
+            </button>
+            <button class="opt pick-opt" data-pick="random">
+              <span class="opt-name">Random</span>
+              <span class="opt-sub">random draw each game</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="chooser" id="scatter-chooser">
+          <div class="chooser-label">CARD SCATTER <span class="label-note">(Sort)</span></div>
+          <div class="opt-row" id="scatter-row">
+            <button class="opt scatter-opt selected" data-scatter="air">
+              <span class="opt-name">In the Air</span>
+              <span class="opt-sub">floating 3D cloud</span>
+            </button>
+            <button class="opt scatter-opt" data-scatter="linear">
+              <span class="opt-name">Linear</span>
+              <span class="opt-sub">rows &amp; columns on the table</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="btn-start" class="btn">▶ START</button>
+        <div class="best-line">Your best here: <span id="menu-best">—</span></div>
+        <p class="how" id="how-text"></p>
+      </div>
+    </div>
+
+    <!-- Win / results -->
+    <div id="screen-win" class="screen hidden">
+      <div class="panel">
+        <h1 class="title win" id="win-title">COMPLETE!</h1>
+        <p class="subtitle" id="win-sub"></p>
+        <div class="score-grid">
+          <div><span id="win-time">0:00</span><label>TIME</label></div>
+          <div><span id="win-extra">0</span><label id="win-extra-label">MISTAKES</label></div>
+          <div><span id="win-score">0</span><label>SCORE</label></div>
+        </div>
+        <div id="win-best-line" class="best-line"></div>
+        <button id="btn-again" class="btn">↻ PLAY AGAIN</button>
+        <button id="btn-submit" class="btn ghost">🏆 Submit to leaderboard</button>
+        <button id="btn-menu" class="btn ghost">⏏ Menu</button>
+      </div>
+    </div>
+
+    <div id="loading" class="loading">Loading…</div>
+  </div>
+
+  <!-- shared leaderboard helper (classic script → window.SillyLeaderboard) -->
+  <script src="../../shared/leaderboard.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script>
+    // Fallback: if the ES module / import map fails (404 / bad MIME), main.js never runs,
+    // so this classic script swaps the stuck "Loading…" for a friendly message.
+    (function () {
+      function fail(msg) {
+        if (window.__atomicReady) return;
+        var l = document.getElementById("loading");
+        if (l) { l.textContent = msg; l.classList.remove("hidden"); }
+      }
+      setTimeout(function () { fail("Failed to load the game engine. Check your connection and reload."); }, 7000);
+      window.addEventListener("error", function () { fail("Something failed to load. Please reload the page."); });
+    })();
+  </script>
+  <noscript><div class="noscript">This game needs JavaScript enabled.</div></noscript>
+</body>
+</html>

@@ -7,3 +7,6 @@ package-lock.json
 # local / non-project files (reference images, scratch notes, etc.)
 # anchored to repo root so games/*/docs/ (real assets) stay tracked
 /docs/
+
+# full-detail card masters + overlay build asset (never publish these)
+shared/elements/img_full/

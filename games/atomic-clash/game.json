@@ -1,0 +1,15 @@
+{
+  "title": "Atomic Clash",
+  "tagline": "Rebuild the periodic table in 3D — or match it from memory.",
+  "description": "Two element games in one. SORT: a shuffled cloud of element cards floats in 3D — orbit, zoom, pick a card and drop it into its slot to rebuild the whole periodic table. MATCH: flip-pairs memory built from the same cards. Pick 20, 40, 80, or all 118.",
+  "tags": ["3D", "Puzzle", "Chemistry", "Memory", "Three.js"],
+  "accent": "#6ad7ff",
+  "thumb": "docs/thumb.png",
+  "status": "ready",
+  "author": "Atlas Bank",
+  "leaderboard": {
+    "label": "Score",
+    "order": "desc",
+    "max": 25
+  }
+}
